@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true">
+        <processor name="org.hibernate.validator.ap.ConstraintValidationProcessor" />
+        <processorPath useClasspath="false">
+          <entry name="$PROJECT_DIR$/lib/dist/hibernate-validator-annotation-processor-6.1.7.Final.jar" />
+        </processorPath>
+      </profile>
+    </annotationProcessing>
+  </component>
+</project>
