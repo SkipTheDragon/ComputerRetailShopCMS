@@ -17,7 +17,7 @@ public abstract class Form<T extends EntityType>  {
     protected ArrayList<Form<?>> formArrayList = new ArrayList<>();
 
     /*
-    Every time the object changes we refresh the form
+    Every time the object changes we recreateForm the form
      */
     public void setObject(T object) {
         this.object = object;
@@ -25,6 +25,18 @@ public abstract class Form<T extends EntityType>  {
 
     protected void addSubform(Form<?> subform) {
         formArrayList.add(subform);
+    }
+
+    protected void recreateForm() {
+        panel.removeAll();
+
+        if (object.getId() != 0 || objectExistInDatabase(object.getId())) {
+            this.object = getNewInstanceOfObject();
+        }
+
+       this.formBuilder = new FormBuilder<>(object, this, panel);
+       createForm();
+       repaintPanel();
     }
 
     /**
@@ -93,8 +105,6 @@ public abstract class Form<T extends EntityType>  {
         } finally {
             session.close();
         }
-     //   resetObject();
-
     }
 
     protected void update() {
@@ -113,8 +123,6 @@ public abstract class Form<T extends EntityType>  {
         } finally {
             session.close();
         }
-      //  resetObject();
-
     }
 
     protected void delete(int objectId) {
@@ -135,8 +143,6 @@ public abstract class Form<T extends EntityType>  {
         } finally {
             session.close();
         }
-
-       // resetObjectAndRefresh();
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -145,8 +151,7 @@ public abstract class Form<T extends EntityType>  {
 
     protected void addClearButton() {
         formBuilder.addButton(new JButton("Clear"), e -> {
-            //rebuildForm();
-            repaintPanel();
+            recreateForm();
         });
 
     }
@@ -154,7 +159,6 @@ public abstract class Form<T extends EntityType>  {
     protected void addSubmitButton() {
         formBuilder.addButton(new JButton("Submit"), e -> {
             formBuilder.submit();
-           // rebuildForm();
         });
 
     }

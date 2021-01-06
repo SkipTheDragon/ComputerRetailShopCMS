@@ -79,11 +79,6 @@ public class FormBuilder<T extends EntityType> {
         panel.repaint();
     }
 
-    public void resetForm() {
-        this.object = form.getNewInstanceOfObject();
-        panel.removeAll();
-        buildForm();
-    }
 
     /**
      * Handles rendering fields and buttons.
@@ -93,11 +88,9 @@ public class FormBuilder<T extends EntityType> {
             formField.render(panel);
         }
 
-        if (!subForms.isEmpty()) {
-            for (FormBuilder<?> subForm : subForms) {
-                subForm.buildForm();
-                this.panel.add(subForm.panel, "span, wrap");
-            }
+        for (FormBuilder<?> subForm : subForms) {
+            subForm.buildForm();
+            this.panel.add(subForm.panel, "span, wrap");
         }
 
         renderButtons();

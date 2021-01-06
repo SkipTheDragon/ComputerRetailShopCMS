@@ -15,7 +15,7 @@ public class ComponentsSpecForm extends Form<ComponentSpecification> {
     protected void addClearButton() {
         formBuilder.addButton(new JButton("Clear"), e -> {
             toAdd = new ArrayList<>();
-            formBuilder.resetForm();
+            recreateForm();
             repaintPanel();
         });
     }

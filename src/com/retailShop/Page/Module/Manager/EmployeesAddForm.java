@@ -39,7 +39,7 @@ public class EmployeesAddForm extends Form<User> {
         formBuilder.addButton(new JButton("Export table"), e -> {
             formEventManager.notify("exportTable");
         });
-
+        formBuilder.buildForm();
         return formBuilder;
     }
 

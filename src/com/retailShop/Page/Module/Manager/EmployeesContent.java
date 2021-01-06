@@ -47,7 +47,7 @@ public class EmployeesContent extends Content {
             }
         });
 
-        employeesAddForm.createForm().buildForm();
+        employeesAddForm.createForm();
 
         tableBuilder.addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {

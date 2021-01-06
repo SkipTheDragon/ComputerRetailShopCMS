@@ -150,7 +150,6 @@ public class FormField {
      * @param panel where we add our labels to.
      */
     public void render(JPanel panel) {
-
         if (defaultValue == null) {
             setValueFromObject();
         }
