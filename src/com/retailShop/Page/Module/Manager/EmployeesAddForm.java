@@ -10,7 +10,6 @@ import com.retailShop.Repository.UserRepository;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
-import java.util.Arrays;
 
 public class EmployeesAddForm extends Form<User> {
 
@@ -46,7 +45,10 @@ public class EmployeesAddForm extends Form<User> {
 
     @Override
     public void processForm() {
-        updateOrInsert();
+        if (!objectExistInDatabase(object.getId()))
+            insert();
+        else
+            update();
     }
 
     @Override

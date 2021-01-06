@@ -90,7 +90,7 @@ public class User implements EntityType {
         this.userRoleByRoleid = userRoleByRoleid;
     }
 
-    @ManyToOne
+    @OneToOne(orphanRemoval = true, cascade=CascadeType.ALL )
     @JoinColumn(name = "contact", referencedColumnName = "id")
     public UserContact getUserContactByContact() {
         return userContactByContact;

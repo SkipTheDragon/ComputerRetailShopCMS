@@ -21,13 +21,22 @@ public class FormBuilder<T extends EntityType> {
     /**
      * The object that we bind data to.
      */
-    private final T object;
+    private T object;
     private final Form<T> form;
     private JPanel panel;
 
     private String mapTo;
     private String name;
     private boolean isRendered = false;
+    private boolean isSubForm = false;
+
+    public boolean isSubForm() {
+        return isSubForm;
+    }
+
+    public void setSubForm(boolean subForm) {
+        isSubForm = subForm;
+    }
 
     /**
      * @param object The object that we bind data to.
@@ -51,18 +60,15 @@ public class FormBuilder<T extends EntityType> {
      */
 
     public void submit() {
-
-        if (!subForms.isEmpty()) {
-            subFormsAsFields();
-        }
+        subFormsAsFields();
         // add input from each field
         bindInputToObject();
 
         if (isFormValid()) {
             form.setObject(object);
-            form.processForm();
-            System.out.println(form.object.getId());
-            object.setId(form.object.getId());
+            if (!isSubForm) {
+                form.processForm();
+            }
             form.formEventManager.notify("formRefresh");
 
         } else {
@@ -71,6 +77,12 @@ public class FormBuilder<T extends EntityType> {
 
         panel.revalidate();
         panel.repaint();
+    }
+
+    public void resetForm() {
+        this.object = form.getNewInstanceOfObject();
+        panel.removeAll();
+        buildForm();
     }
 
     /**
@@ -115,6 +127,10 @@ public class FormBuilder<T extends EntityType> {
         return object;
     }
 
+    public JPanel getPanel() {
+        return panel;
+    }
+
     /**
      *
      */
@@ -122,7 +138,7 @@ public class FormBuilder<T extends EntityType> {
         subForms.add(formBuilder);
         formBuilder.setMapTo(mapTo);
         formBuilder.setName(name);
-
+        formBuilder.setSubForm(true);
         form.addSubform(formBuilder.getForm());
 
         return this;
@@ -131,8 +147,7 @@ public class FormBuilder<T extends EntityType> {
     private void subFormsAsFields() {
         for (FormBuilder<?> subForm : subForms) {
             subForm.submit();
-
-            FormField formField = new FormField(subForm.getMapTo(), subForm.getForm().object, subForm.getName());
+            FormField formField = new FormField(subForm.getMapTo(), subForm.getObject(), subForm.getName());
             formField.setHiddenField(true);
             addField(formField);
         }

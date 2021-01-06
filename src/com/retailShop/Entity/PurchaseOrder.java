@@ -2,10 +2,7 @@ package com.retailShop.Entity;
 
 import com.retailShop.Page.Module.Forms.EntityType;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Objects;
 
@@ -17,6 +14,8 @@ public class PurchaseOrder implements EntityType {
 
     @Id
     @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+
     public int getId() {
         return id;
     }

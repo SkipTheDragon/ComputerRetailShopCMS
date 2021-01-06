@@ -17,10 +17,10 @@ public class EmployeesContent extends Content {
         String[] columns = {"id","password","name", "lastName"};
 
         EmployeesAddForm employeesAddForm = new EmployeesAddForm();
-        TableBuilder<User> tableBuilder = new TableBuilder<>(columns,userRepository.getUsers());
+        TableBuilder<User> tableBuilder = new TableBuilder<>(columns,userRepository.getAllData(User.class));
 
         employeesAddForm.formEventManager.subscribe("formRefresh", e -> {
-            tableBuilder.refreshTable(userRepository.getUsers());
+            tableBuilder.refreshTable(userRepository.getAllData(User.class));
         });
 
         employeesAddForm.formEventManager.subscribe("exportTable", e -> {

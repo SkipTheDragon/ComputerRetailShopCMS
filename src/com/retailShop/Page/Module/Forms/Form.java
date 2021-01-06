@@ -1,13 +1,11 @@
 package com.retailShop.Page.Module.Forms;
 
-import com.retailShop.Entity.UserContact;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import javax.swing.*;
-import java.io.Serializable;
 import java.util.ArrayList;
 
 public abstract class Form<T extends EntityType>  {
@@ -23,50 +21,16 @@ public abstract class Form<T extends EntityType>  {
      */
     public void setObject(T object) {
         this.object = object;
-        rebuildForm();
-    }
-
-    public FormBuilder<T> getFormBuilder() {
-        return formBuilder;
-    }
-
-    public void resetObject() {
-         this.object = getNewInstanceOfObject();
-         rebuildForm();
-    }
-
-    public void rebuildForm() {
-        clearPanel();
-        this.formBuilder = new FormBuilder<>(object, this, panel);
-        createForm().buildForm();
-        formEventManager.notify("formRefresh");
-
-        for (Form<?> form : formArrayList) {
-            form.rebuildForm();
-        }
     }
 
     protected void addSubform(Form<?> subform) {
         formArrayList.add(subform);
     }
 
-    public void setPanel(JPanel panel) {
-        this.panel = panel;
-    }
-
     /**
      * Shortcut for repainting the panel.
      */
-    private void repaintPanel() {
-        panel.repaint();
-        panel.revalidate();
-    }
-
-    /**
-     * Shortcut for clearing the panel.
-     */
-    private void clearPanel() {
-        panel.removeAll();
+    protected void repaintPanel() {
         panel.repaint();
         panel.revalidate();
     }
@@ -113,7 +77,7 @@ public abstract class Form<T extends EntityType>  {
     ///////////////////////////////////////////////////////////////////////////
     // Basic operations
     ///////////////////////////////////////////////////////////////////////////
-    protected void updateOrInsert() {
+    protected void insert() {
         SessionFactory factory = new Configuration().configure().buildSessionFactory();
 
         Session session = factory.openSession();
@@ -123,13 +87,34 @@ public abstract class Form<T extends EntityType>  {
             session.save(object);
             session.flush();
             tx.commit();
-
         } catch (HibernateException e) {
             if (tx!=null) tx.rollback();
             e.printStackTrace();
         } finally {
             session.close();
         }
+     //   resetObject();
+
+    }
+
+    protected void update() {
+        SessionFactory factory = new Configuration().configure().buildSessionFactory();
+
+        Session session = factory.openSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            session.update(object);
+            session.flush();
+            tx.commit();
+        } catch (HibernateException e) {
+            if (tx!=null) tx.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+      //  resetObject();
+
     }
 
     protected void delete(int objectId) {
@@ -143,6 +128,7 @@ public abstract class Form<T extends EntityType>  {
                 session.delete(session.get(object.getClass(), objectId));
             }
             tx.commit();
+
         } catch (HibernateException e) {
             if (tx!=null) tx.rollback();
             e.printStackTrace();
@@ -150,7 +136,7 @@ public abstract class Form<T extends EntityType>  {
             session.close();
         }
 
-        resetObject();
+       // resetObjectAndRefresh();
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -159,7 +145,7 @@ public abstract class Form<T extends EntityType>  {
 
     protected void addClearButton() {
         formBuilder.addButton(new JButton("Clear"), e -> {
-            resetObject();
+            //rebuildForm();
             repaintPanel();
         });
 
@@ -168,6 +154,7 @@ public abstract class Form<T extends EntityType>  {
     protected void addSubmitButton() {
         formBuilder.addButton(new JButton("Submit"), e -> {
             formBuilder.submit();
+           // rebuildForm();
         });
 
     }

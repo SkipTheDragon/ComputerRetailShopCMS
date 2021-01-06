@@ -71,8 +71,10 @@ public class FormField {
      * Tells the TypeConvertor to convert the input from JComponent to this type of class.
      * @param convertTo Class we need to convert the parameter to.
      */
-    public void convertTo(Class<?> convertTo) {
+    public FormField convertTo(Class<?> convertTo) {
         this.convertTo = convertTo;
+
+        return this;
     }
 
     public void setObject(Object object) {

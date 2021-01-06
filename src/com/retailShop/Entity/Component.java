@@ -2,10 +2,7 @@ package com.retailShop.Entity;
 
 import com.retailShop.Page.Module.Forms.EntityType;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
@@ -13,6 +10,7 @@ public class Component implements EntityType {
     private int id;
     private String den;
     private Integer price;
+    private ComponentType type;
     private Double sale;
     private String maker;
     private Integer warranty;
@@ -21,6 +19,8 @@ public class Component implements EntityType {
 
     @Id
     @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+
     public int getId() {
         return id;
     }
@@ -110,5 +110,17 @@ public class Component implements EntityType {
     @Override
     public int hashCode() {
         return Objects.hash(id, den, price, sale, maker, warranty, stock, specs);
+    }
+
+
+
+    @ManyToOne()
+    @JoinColumn(name = "type", referencedColumnName = "id")
+    public ComponentType getType() {
+        return type;
+    }
+
+    public void setType(ComponentType type) {
+        this.type = type;
     }
 }
