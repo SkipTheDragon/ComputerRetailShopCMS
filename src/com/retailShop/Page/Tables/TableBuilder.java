@@ -4,9 +4,12 @@ import com.retailShop.Page.Module.Forms.FormEventManager;
 import com.toddfast.util.convert.TypeConverter;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.io.File;
@@ -64,7 +67,7 @@ public class TableBuilder<T> {
         for (T object : data) {
             ArrayList<String> row = new ArrayList<>();
             for (String column_name : columns) {
-                row.add(getRowDataFromObjectProperty(object, column_name));
+                row.add(getPropertyFromString(object,column_name));
             }
             columnsAsArrayList.add(row.toArray(String[]::new));
         }
@@ -72,13 +75,27 @@ public class TableBuilder<T> {
         this.columnsAsStringArray = columnsAsArrayList.toArray(String[][]::new);
     }
 
+    private String getPropertyFromString(T parentObject, String column_name) {
+        if (column_name.contains("_")) {
+            String[] word = column_name.split("_");
+
+            try {
+                Object childObject = invokeGetter(parentObject, word[0]);
+                return invokeGetter(childObject, word[1]).toString();
+            } catch (IntrospectionException | InvocationTargetException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return getRowDataFromObjectProperty(parentObject, column_name);
+    }
     /**
      * Get the data from the object according to column_name
      * @param object we need to extract the data from.
      * @param column_name (object's property) the data that we need.
      * @return the value of object's property.
      */
-    private String getRowDataFromObjectProperty(T object, String column_name) {
+    private String getRowDataFromObjectProperty(Object object, String column_name) {
         try {
             Object getter = invokeGetter(object,column_name);
             if (getter != null) {
@@ -212,11 +229,54 @@ public class TableBuilder<T> {
         return 0;
     }
 
-    private Object invokeGetter(T obj, String propertyName) throws IntrospectionException, InvocationTargetException, IllegalAccessException {
+    private Object invokeGetter(Object obj, String propertyName) throws IntrospectionException, InvocationTargetException, IllegalAccessException {
         PropertyDescriptor pd;
         pd = new PropertyDescriptor(propertyName, obj.getClass());
         Method getter = pd.getReadMethod();
 
         return getter.invoke(obj);
+    }
+
+
+    public static class Search {
+        private JTextField jTextField;
+        private TableRowSorter<TableModel> rowSorter;
+
+        public Search(JTextField jTextField, JTable table) {
+            this.jTextField = jTextField;
+            this.rowSorter = new TableRowSorter<>(table.getModel());
+            table.setRowSorter(rowSorter);
+        }
+
+        public void attachSearchHandler() {
+            jTextField.getDocument().addDocumentListener(new DocumentListener(){
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    String text = jTextField.getText();
+
+                    if (text.trim().length() == 0) {
+                        rowSorter.setRowFilter(null);
+                    } else {
+                        rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
+                    }
+                }
+
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    String text = jTextField.getText();
+
+                    if (text.trim().length() == 0) {
+                        rowSorter.setRowFilter(null);
+                    } else {
+                        rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
+                    }
+                }
+
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+
+                }
+            });
+        }
     }
 }

@@ -22,9 +22,13 @@ public abstract class Form<T extends EntityType>  {
         this.formBuilder = new FormBuilder<>(object, this, panel);
     }
 
+    public FormBuilder<T> getFormBuilder() {
+        return formBuilder;
+    }
+
     /*
-        Every time the object changes we recreateForm the form
-         */
+            Every time the object changes we recreateForm the form
+             */
     public void setObject(T object) {
         this.object = object;
     }
@@ -61,7 +65,7 @@ public abstract class Form<T extends EntityType>  {
         formEventManager.notify("formRefresh");
 
         for (Form<?> form : formArrayList) {
-            form.refreshForm();
+            form.rebuildForm();
         }
     }
 

@@ -21,7 +21,7 @@ public class ComponentsContent extends Content {
         ComponentRepository componentRepository = new ComponentRepository();
         String[] columns = {"den","price","type", "sale","maker","warranty","stock","specs"};
 
-        ComponentsSpecForm componentsForm = new ComponentsSpecForm(new JPanel(), new ComponentSpecification());
+        ComponentsForm componentsForm = new ComponentsForm(new JPanel(), new Component());
         TableBuilder<Component> tableBuilder = new TableBuilder<>(columns,componentRepository.getAllData(Component.class));
 
         componentsForm.formEventManager.subscribe("formRefresh", e -> {

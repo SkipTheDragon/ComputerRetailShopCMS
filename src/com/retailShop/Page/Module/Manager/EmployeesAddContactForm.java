@@ -24,6 +24,7 @@ public class EmployeesAddContactForm extends Form<UserContact> {
 
         String[] countryCodes = Locale.getISOCountries();
         JComboBox<String> comboBox = new JComboBox<>();
+
         for (String countryCode : countryCodes) {
             Locale obj = new Locale("", countryCode);
             comboBox.addItem(obj.getDisplayCountry());

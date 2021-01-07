@@ -57,7 +57,7 @@ public class ComponentSpecification implements EntityType {
         return Objects.hash(id, den, content);
     }
 
-    @ManyToOne
+    @ManyToOne(cascade=CascadeType.ALL)
     @JoinColumn(name = "component", referencedColumnName = "id")
     public Component getComponentByComponent() {
         return componentByComponent;

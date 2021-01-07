@@ -63,8 +63,10 @@ public class FormField {
         return hiddenField;
     }
 
-    public void setHiddenField(boolean hiddenField) {
+    public FormField setHiddenField(boolean hiddenField) {
         this.hiddenField = hiddenField;
+
+        return this;
     }
 
     /**
@@ -127,6 +129,8 @@ public class FormField {
     }
 
     public void run() {
+        if(mapTo == null) return;
+
         bindInput();
         checkForErrors();
     }

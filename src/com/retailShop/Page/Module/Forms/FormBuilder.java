@@ -27,6 +27,15 @@ public class FormBuilder<T extends EntityType> {
     private String name;
     private boolean isRendered = false;
     private boolean isSubForm = false;
+    private Relation relation = Relation.ONE_TO_MANY;
+
+    public enum Relation {
+        ONE_TO_MANY,MANY_TO_ONE,MANY_TO_MANY
+    }
+
+    public void setRelation(Relation relation) {
+        this.relation = relation;
+    }
 
     public boolean isSubForm() {
         return isSubForm;
@@ -58,15 +67,27 @@ public class FormBuilder<T extends EntityType> {
      */
 
     public void submit() {
+        if (relation == Relation.ONE_TO_MANY) {
+            for (FormBuilder<?> subForm : forms) {
+                subForm.submit();
+            }
+        }
         subFormsAsFields();
         // add input from each field
         bindInputToObject();
 
         if (isFormValid()) {
             form.setObject(this.object);
-            if (!isSubForm) {
+            if (relation == Relation.ONE_TO_MANY || !isSubForm) {
                 form.processForm();
             }
+
+            if (relation == Relation.MANY_TO_ONE) {
+                for (FormBuilder<?> subForm : forms) {
+                    subForm.submit();
+                }
+            }
+
             form.formEventManager.notify("formRefresh");
         } else {
             displayErrors();
@@ -137,7 +158,7 @@ public class FormBuilder<T extends EntityType> {
 
     private void subFormsAsFields() {
         for (FormBuilder<?> subForm : forms) {
-            subForm.submit();
+
             if (subForm.isSubForm) {
                 FormField formField = new FormField(subForm.getMapTo(), subForm.getObject(), subForm.getName());
                 formField.setHiddenField(true);

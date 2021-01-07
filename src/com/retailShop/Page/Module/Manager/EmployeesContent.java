@@ -8,6 +8,11 @@ import com.retailShop.Repository.UserRepository;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
+import java.awt.*;
 import java.io.File;
 
 public class EmployeesContent extends Content {
@@ -15,7 +20,7 @@ public class EmployeesContent extends Content {
     @Override
     public void buildUi() {
         UserRepository userRepository = new UserRepository();
-        String[] columns = {"id","password","name", "lastName"};
+        String[] columns = {"id","password","name", "lastName", "userContactByContact_email"};
 
         EmployeesAddForm employeesAddForm = new EmployeesAddForm(new JPanel(), new User());
         TableBuilder<User> tableBuilder = new TableBuilder<>(columns,userRepository.getAllData(User.class));
@@ -61,11 +66,20 @@ public class EmployeesContent extends Content {
         });
 
         JTable jt = tableBuilder.getTable();
-        JScrollPane sp=new JScrollPane(jt);
+        JScrollPane sp= new JScrollPane(jt);
+        JTextField jtfFilter = new JTextField(5);
+
+
+        new TableBuilder.Search(jtfFilter,jt).attachSearchHandler();
 
         setLayout(new MigLayout("fill","[][]"));
         add(employeesAddForm.getPanel(), "growy");
         add(sp, "grow , push , span");
+        add(new JLabel());
+        add(new JLabel("Specify a word to match:"));
+        add(jtfFilter, "w 100%");
+
+
     }
 
     @Override

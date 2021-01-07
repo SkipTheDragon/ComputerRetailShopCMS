@@ -1,9 +1,6 @@
 package com.retailShop.Page.Module.Base.Components;
 
-import com.retailShop.Entity.Component;
-import com.retailShop.Entity.ComponentType;
-import com.retailShop.Entity.UserContact;
-import com.retailShop.Entity.UserRole;
+import com.retailShop.Entity.*;
 import com.retailShop.Page.Module.Forms.Form;
 import com.retailShop.Page.Module.Forms.FormBuilder;
 import com.retailShop.Page.Module.Forms.FormField;
@@ -14,11 +11,21 @@ import net.miginfocom.swing.MigLayout;
 import org.hibernate.usertype.UserType;
 
 import javax.swing.*;
+import java.util.ArrayList;
 
 public class ComponentsForm extends Form<Component> {
-
+    int specForms = 0;
     public ComponentsForm(JPanel panel, Component object) {
         super(panel, object);
+    }
+
+    @Override
+    protected void addClearButton() {
+        formBuilder.addButton(new JButton("Clear"), e -> {
+            specForms = 0;
+            rebuildForm();
+            repaintPanel();
+        });
     }
 
     @Override
@@ -27,17 +34,31 @@ public class ComponentsForm extends Form<Component> {
 
         ComponentRepository componentRepository= new ComponentRepository();
         JComboBox<ComponentType> types = new JComboBox<>(componentRepository.getTypes());
-
+        formBuilder.setRelation(FormBuilder.Relation.MANY_TO_ONE);
         formBuilder
                 .addField(new FormField("den", new JTextField(10), "Component Name"))
-                .addField(new FormField("price", new JTextField(10), "Price").convertTo(Float.class))
+                .addField(new FormField("price", new JTextField(10), "Price").convertTo(Integer.class))
                 .addField(new FormField("maker", new JTextField(10), "Maker"))
                 .addField(new FormField("warranty", new JTextField(10), "Warranty").convertTo(Integer.class))
                 .addField(new FormField("stock", new JTextField(10), "Stock").convertTo(Integer.class))
                 .addField(new FormField("type", types, "Type"))
         ;
 
+        for (int i = 0; i <= specForms; i++) {
+            FormBuilder<ComponentSpecification> formBuilderSpec = new ComponentsSpecForm(getPanel(), new ComponentSpecification(), object).createForm();
+            formBuilder.addSubForm(null, formBuilderSpec, "Specification");
+        }
 
+        addSubmitButton();
+        addClearButton();
+        addDeleteButton(object.getId(),"Do you really want to delete:" + object.getDen());
+
+        formBuilder.addButton(new JButton("Add new spec"), e -> {
+            specForms += 1;
+            rebuildForm();
+        });
+
+        formBuilder.buildForm();
         return formBuilder;
     }
 
