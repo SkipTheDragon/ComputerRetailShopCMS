@@ -6,6 +6,7 @@ import com.retailShop.Page.Module.Forms.FormBuilder;
 import com.retailShop.Page.Module.Forms.FormField;
 import com.retailShop.Page.Module.Manager.EmployeesAddContactForm;
 import com.retailShop.Repository.ComponentRepository;
+import com.retailShop.Repository.ComponentSpecRepository;
 import com.retailShop.Repository.UserRepository;
 import net.miginfocom.swing.MigLayout;
 import org.hibernate.usertype.UserType;
@@ -44,6 +45,14 @@ public class ComponentsForm extends Form<Component> {
                 .addField(new FormField("type", types, "Type"))
         ;
 
+        if (objectExistInDatabase(object.getId())) {
+            ComponentSpecRepository componentSpecRepository  = new ComponentSpecRepository();
+            for (ComponentSpecification allSpec : componentSpecRepository.getAllSpecsWhereIDis(object.getId())) {
+                FormBuilder<ComponentSpecification> formBuilderSpec = new ComponentsSpecForm(getPanel(), allSpec, object).createForm();
+                formBuilder.addSubForm(null, formBuilderSpec, "Specification");
+            }
+        }
+
         for (int i = 0; i <= specForms; i++) {
             FormBuilder<ComponentSpecification> formBuilderSpec = new ComponentsSpecForm(getPanel(), new ComponentSpecification(), object).createForm();
             formBuilder.addSubForm(null, formBuilderSpec, "Specification");
@@ -57,7 +66,9 @@ public class ComponentsForm extends Form<Component> {
             specForms += 1;
             rebuildForm();
         });
-
+        formBuilder.addButton(new JButton("Export table"), e -> {
+            formEventManager.notify("exportTable");
+        });
         formBuilder.buildForm();
         return formBuilder;
     }

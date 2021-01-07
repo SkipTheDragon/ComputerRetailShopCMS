@@ -10,6 +10,8 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.io.File;
@@ -241,9 +243,28 @@ public class TableBuilder<T> {
     public static class Search {
         private JTextField jTextField;
         private TableRowSorter<TableModel> rowSorter;
+        private JTable table;
 
         public Search(JTextField jTextField, JTable table) {
             this.jTextField = jTextField;
+            this.rowSorter = new TableRowSorter<>(table.getModel());
+            this.table = table;
+
+            jTextField.addFocusListener(new FocusListener() {
+                @Override
+                public void focusGained(FocusEvent e) {
+                    table.setRowSorter(rowSorter);
+                }
+
+                @Override
+                public void focusLost(FocusEvent e) {
+                    table.setRowSorter(null);
+                }
+            });
+        }
+
+        public void updateTable(JTable table) {
+            this.table = table;
             this.rowSorter = new TableRowSorter<>(table.getModel());
             table.setRowSorter(rowSorter);
         }
@@ -278,5 +299,6 @@ public class TableBuilder<T> {
                 }
             });
         }
+
     }
 }

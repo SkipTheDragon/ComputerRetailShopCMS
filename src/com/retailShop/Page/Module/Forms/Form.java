@@ -182,6 +182,7 @@ public abstract class Form<T extends EntityType>  {
     protected void addClearButton() {
         formBuilder.addButton(new JButton("Clear"), e -> {
             rebuildForm();
+            formEventManager.notify("formRefresh");
 
         });
     }
@@ -189,6 +190,9 @@ public abstract class Form<T extends EntityType>  {
     protected void addSubmitButton() {
         formBuilder.addButton(new JButton("Submit"), e -> {
             formBuilder.submit();
+            refreshForm();
+            formEventManager.notify("formRefresh");
+
         });
 
     }
@@ -202,8 +206,11 @@ public abstract class Form<T extends EntityType>  {
 
                 if (response == 0) {
                     delete(objectId);
+                    formEventManager.notify("formRefresh");
+
                 }
             }
+
         });
 
     }
@@ -217,6 +224,8 @@ public abstract class Form<T extends EntityType>  {
 
                 if (response == 0) {
                     delete(objectId);
+                    formEventManager.notify("formRefresh");
+
                 }
             }
         });
