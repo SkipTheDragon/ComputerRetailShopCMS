@@ -42,7 +42,10 @@ public class EmployeesAddContactForm extends Form<UserContact> {
 
     @Override
     public void processForm() {
-        insert();
+        if (!objectExistInDatabase(object.getId()))
+            insert();
+        else
+            update();
     }
 
     @Override

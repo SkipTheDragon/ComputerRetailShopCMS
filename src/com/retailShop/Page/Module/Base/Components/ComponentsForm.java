@@ -1,18 +1,15 @@
 package com.retailShop.Page.Module.Base.Components;
 
 import com.retailShop.Entity.*;
+import com.retailShop.Page.Module.Base.Components.Specification.ComponentsSpecForm;
 import com.retailShop.Page.Module.Forms.Form;
 import com.retailShop.Page.Module.Forms.FormBuilder;
 import com.retailShop.Page.Module.Forms.FormField;
-import com.retailShop.Page.Module.Manager.EmployeesAddContactForm;
 import com.retailShop.Repository.ComponentRepository;
 import com.retailShop.Repository.ComponentSpecRepository;
-import com.retailShop.Repository.UserRepository;
 import net.miginfocom.swing.MigLayout;
-import org.hibernate.usertype.UserType;
 
 import javax.swing.*;
-import java.util.ArrayList;
 
 public class ComponentsForm extends Form<Component> {
     int specForms = 0;

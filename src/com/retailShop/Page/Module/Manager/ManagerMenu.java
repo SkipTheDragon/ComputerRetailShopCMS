@@ -15,7 +15,7 @@ public class ManagerMenu extends Menu {
     public void buildUi() {
         applyDefaultSettings(contentHandler);
 
-        addButtonToMenu("Manage Employees", contentHandler, new EmployeesContent());
-        addButtonToMenu("Manage Components",contentHandler, new ComponentsContent());
+        addButtonToMenu("Manage Employees", contentHandler, new EmployeesContent(contentHandler));
+        addButtonToMenu("Manage Components",contentHandler, new ComponentsContent(contentHandler));
     }
 }

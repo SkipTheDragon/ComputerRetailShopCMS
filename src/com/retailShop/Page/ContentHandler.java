@@ -11,10 +11,11 @@ import javax.swing.*;
 public class ContentHandler extends JPanel {
     private InfoBar infoBar;
     private User user;
-    private Content currentContent  = new HomeContent();
+    private Content currentContent;
 
     public ContentHandler(User user) {
         this.user = user;
+        currentContent = new HomeContent(this);
         this.infoBar = new InfoBar(user.getName(),currentContent.toString());
     }
 

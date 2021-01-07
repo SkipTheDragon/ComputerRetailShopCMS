@@ -1,6 +1,7 @@
 package com.retailShop.Page.Module.Manager;
 
 import com.retailShop.Entity.User;
+import com.retailShop.Page.ContentHandler;
 import com.retailShop.Page.Module.Base.Content;
 import com.retailShop.Page.Module.Forms.Events.ExportTable;
 import com.retailShop.Page.Module.Forms.FormBuilder;
@@ -11,6 +12,10 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 
 public class EmployeesContent extends Content {
+
+    public EmployeesContent(ContentHandler content) {
+        super(content);
+    }
 
     @Override
     public void buildUi() {

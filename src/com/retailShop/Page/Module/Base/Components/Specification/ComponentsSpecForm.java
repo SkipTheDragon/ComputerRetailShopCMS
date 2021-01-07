@@ -1,4 +1,4 @@
-package com.retailShop.Page.Module.Base.Components;
+package com.retailShop.Page.Module.Base.Components.Specification;
 
 import com.retailShop.Entity.*;
 import com.retailShop.Page.Module.Forms.Form;
@@ -11,11 +11,15 @@ import java.util.ArrayList;
 
 public class ComponentsSpecForm extends Form<ComponentSpecification> {
 
-    private final Component component;
+    private Component component = null;
 
     public ComponentsSpecForm(JPanel panel, ComponentSpecification object, Component component) {
         super(panel, object);
         this.component = component;
+    }
+
+    public ComponentsSpecForm(JPanel panel, ComponentSpecification object) {
+        super(panel, object);
     }
 
     @Override
@@ -23,9 +27,17 @@ public class ComponentsSpecForm extends Form<ComponentSpecification> {
         panel.setLayout(new MigLayout("wrap 2","[][]"));
 
         formBuilder.addField(new FormField("den", new JTextField(5) , "Den"))
-                    .addField(new FormField("content", new JTextArea(10,10), "Content"))
-                    .addField(new FormField("componentByComponent", component, "Component")
-                            .setHiddenField(true));
+                    .addField(new FormField("content", new JTextArea(10,10), "Content"));
+
+        if (component != null) {
+            formBuilder.addField(new FormField("componentByComponent", component, "Component")
+                    .setHiddenField(true));
+        } else {
+            addSubmitButton();
+            addClearButton();
+            addDeleteButton(object.getId(),"Do you really want to delete:" + object.getDen());
+            formBuilder.buildForm();
+        }
         return formBuilder;
     }
 

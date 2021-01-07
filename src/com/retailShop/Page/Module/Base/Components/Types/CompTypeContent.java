@@ -1,55 +1,32 @@
-package com.retailShop.Page.Module.Base.Components;
+package com.retailShop.Page.Module.Base.Components.Types;
 
 import com.retailShop.Entity.Component;
+import com.retailShop.Entity.ComponentType;
 import com.retailShop.Page.ContentHandler;
-import com.retailShop.Page.Module.Base.Components.Specification.CompSpecificationContent;
-import com.retailShop.Page.Module.Base.Components.Types.CompTypeContent;
+import com.retailShop.Page.Module.Base.Components.ComponentsContent;
+import com.retailShop.Page.Module.Base.Components.ComponentsForm;
 import com.retailShop.Page.Module.Base.Content;
 import com.retailShop.Page.Module.Forms.Events.ExportTable;
 import com.retailShop.Page.Tables.TableBuilder;
 import com.retailShop.Repository.ComponentRepository;
+import com.retailShop.Repository.ComponentTypeRepository;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import java.awt.*;
 
-public class ComponentsContent extends Content {
-
-    public ComponentsContent(ContentHandler content) {
+public class CompTypeContent extends ComponentsContent {
+    public CompTypeContent(ContentHandler content) {
         super(content);
-    }
-
-    public JPanel buttonbar() {
-        JPanel buttonbar = new JPanel();
-        JButton components = new JButton("Manage Components");
-        JButton types = new JButton("Manage Types");
-        JButton specifications = new JButton("Manage Specifications");
-
-        buttonbar.add(components);
-        buttonbar.add(specifications);
-        buttonbar.add(types);
-
-        components.addActionListener(e -> {
-            content.setCurrentContent(new ComponentsContent(content));
-        });
-
-        types.addActionListener(e -> {
-            content.setCurrentContent(new CompTypeContent(content));
-        });
-
-        specifications.addActionListener(e -> {
-            content.setCurrentContent(new CompSpecificationContent(content));
-        });
-
-        return buttonbar;
     }
 
     @Override
     public void buildUi() {
-        ComponentRepository componentRepository = new ComponentRepository();
-        String[] columns = {"den","price","type", "sale","maker","warranty","stock"};
+        ComponentTypeRepository componentTypeRepository = new ComponentTypeRepository();
+        String[] columns = {"id","den"};
 
-        ComponentsForm componentsForm = new ComponentsForm(new JPanel(), new Component());
-        TableBuilder<Component> tableBuilder = new TableBuilder<>(columns,componentRepository.getAllData(Component.class));
+        CompTypeForm componentsForm = new CompTypeForm(new JPanel(), new ComponentType());
+        TableBuilder<ComponentType> tableBuilder = new TableBuilder<>(columns,componentTypeRepository.getAllData(ComponentType.class));
 
         componentsForm.createForm();
 
@@ -68,7 +45,7 @@ public class ComponentsContent extends Content {
         add(jtfFilter, "w 100%");
 
         componentsForm.formEventManager.subscribe("formRefresh", e -> {
-            tableBuilder.refreshTable(componentRepository.getAllData(Component.class));
+            tableBuilder.refreshTable(componentTypeRepository.getAllData(ComponentType.class));
             tableSearchHandler.updateTable(jt);
         });
 
@@ -82,11 +59,10 @@ public class ComponentsContent extends Content {
                 }
             }
         });
-
     }
 
     @Override
     public String toString() {
-        return "Manage Components";
+        return "Manage Component Types";
     }
 }

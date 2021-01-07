@@ -13,7 +13,7 @@ public abstract class Menu extends JPanel {
     public void applyDefaultSettings(ContentHandler contentHandler) {
         setLayout(new MigLayout("","[]",""));
         setBackground(Color.BLACK);
-        addButtonToMenu("Home", contentHandler, new HomeContent());
+        addButtonToMenu("Home", contentHandler, new HomeContent(contentHandler));
     }
 
     public void addButtonToMenu(String buttonText, ContentHandler contentHandler, Content linkTo) {
