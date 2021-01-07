@@ -11,6 +11,10 @@ import java.util.Locale;
 
 public class EmployeesAddContactForm extends Form<UserContact> {
 
+    public EmployeesAddContactForm(JPanel panel, UserContact object) {
+        super(panel, object);
+    }
+
     @Override
     public FormBuilder<UserContact> createForm() {
         panel.setLayout(new MigLayout("wrap 2","[][]"));
@@ -32,13 +36,11 @@ public class EmployeesAddContactForm extends Form<UserContact> {
                 .addField(new FormField("city", new JTextField(10), "City"))
                 .addField(new FormField("address", new JTextField(10), "Address"))
         ;
-
         return formBuilder;
     }
 
     @Override
     public void processForm() {
-        System.out.println(object);
         insert();
     }
 

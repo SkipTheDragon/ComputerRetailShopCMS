@@ -1,7 +1,5 @@
 package com.retailShop.Page.Module.Forms;
 
-import com.retailShop.Entity.UserContact;
-
 import javax.swing.*;
 
 import java.awt.event.ActionListener;
@@ -16,12 +14,12 @@ public class FormBuilder<T extends EntityType> {
 
     private final ArrayList<JButton> buttons = new ArrayList<>();
 
-    private final ArrayList<FormBuilder<?>> subForms = new ArrayList<>();
+    private final ArrayList<FormBuilder<?>> forms = new ArrayList<>();
 
     /**
      * The object that we bind data to.
      */
-    private T object;
+    private final T object;
     private final Form<T> form;
     private JPanel panel;
 
@@ -65,12 +63,11 @@ public class FormBuilder<T extends EntityType> {
         bindInputToObject();
 
         if (isFormValid()) {
-            form.setObject(object);
+            form.setObject(this.object);
             if (!isSubForm) {
                 form.processForm();
             }
             form.formEventManager.notify("formRefresh");
-
         } else {
             displayErrors();
         }
@@ -84,13 +81,13 @@ public class FormBuilder<T extends EntityType> {
      * Handles rendering fields and buttons.
      */
     public void buildForm() {
+
         for (FormField formField : formFields) {
             formField.render(panel);
         }
 
-        for (FormBuilder<?> subForm : subForms) {
+        for (FormBuilder<?> subForm : forms) {
             subForm.buildForm();
-            this.panel.add(subForm.panel, "span, wrap");
         }
 
         renderButtons();
@@ -128,21 +125,24 @@ public class FormBuilder<T extends EntityType> {
      *
      */
     public FormBuilder<T> addSubForm(String mapTo, FormBuilder<?> formBuilder, String name) {
-        subForms.add(formBuilder);
+        forms.add(formBuilder);
         formBuilder.setMapTo(mapTo);
         formBuilder.setName(name);
         formBuilder.setSubForm(true);
+
         form.addSubform(formBuilder.getForm());
 
         return this;
     }
 
     private void subFormsAsFields() {
-        for (FormBuilder<?> subForm : subForms) {
+        for (FormBuilder<?> subForm : forms) {
             subForm.submit();
-            FormField formField = new FormField(subForm.getMapTo(), subForm.getObject(), subForm.getName());
-            formField.setHiddenField(true);
-            addField(formField);
+            if (subForm.isSubForm) {
+                FormField formField = new FormField(subForm.getMapTo(), subForm.getObject(), subForm.getName());
+                formField.setHiddenField(true);
+                addField(formField);
+            }
         }
     }
 
@@ -183,8 +183,8 @@ public class FormBuilder<T extends EntityType> {
     }
 
     private boolean areSubFormsValid() {
-        if (!subForms.isEmpty()) {
-            for (FormBuilder<?> subForm : subForms) {
+        if (!forms.isEmpty()) {
+            for (FormBuilder<?> subForm : forms) {
                 if (!subForm.isFormValid())
                     return false;
             }
@@ -192,9 +192,6 @@ public class FormBuilder<T extends EntityType> {
         return true;
     }
 
-    public void setPanel(JPanel panel) {
-        this.panel = panel;
-    }
 
     /**
      * Adds a new Field object in ArrayList where all fields are stored.

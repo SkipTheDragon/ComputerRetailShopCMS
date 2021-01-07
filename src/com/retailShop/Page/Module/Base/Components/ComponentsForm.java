@@ -17,6 +17,10 @@ import javax.swing.*;
 
 public class ComponentsForm extends Form<Component> {
 
+    public ComponentsForm(JPanel panel, Component object) {
+        super(panel, object);
+    }
+
     @Override
     public FormBuilder<Component> createForm() {
         panel.setLayout(new MigLayout("wrap 2","[][]"));

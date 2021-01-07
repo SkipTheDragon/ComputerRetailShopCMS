@@ -2,6 +2,7 @@ package com.retailShop.Page.Module.Manager;
 
 import com.retailShop.Entity.User;
 import com.retailShop.Page.Module.Base.Content;
+import com.retailShop.Page.Module.Forms.FormBuilder;
 import com.retailShop.Page.Tables.TableBuilder;
 import com.retailShop.Repository.UserRepository;
 import net.miginfocom.swing.MigLayout;
@@ -16,7 +17,7 @@ public class EmployeesContent extends Content {
         UserRepository userRepository = new UserRepository();
         String[] columns = {"id","password","name", "lastName"};
 
-        EmployeesAddForm employeesAddForm = new EmployeesAddForm();
+        EmployeesAddForm employeesAddForm = new EmployeesAddForm(new JPanel(), new User());
         TableBuilder<User> tableBuilder = new TableBuilder<>(columns,userRepository.getAllData(User.class));
 
         employeesAddForm.formEventManager.subscribe("formRefresh", e -> {
@@ -53,6 +54,8 @@ public class EmployeesContent extends Content {
             if (!e.getValueIsAdjusting()) {
                 if (tableBuilder.getSelectedRowAsObject("name") != null) {
                     employeesAddForm.setObject(tableBuilder.getSelectedRowAsObject("name"));
+                    employeesAddForm.refreshForm();
+
                 }
             }
         });

@@ -10,15 +10,21 @@ import java.util.ArrayList;
 
 public abstract class Form<T extends EntityType>  {
 
-    protected JPanel panel = new JPanel();
-    protected T object = getNewInstanceOfObject();
-    protected FormBuilder<T> formBuilder = new FormBuilder<>(object, this, panel);
+    protected JPanel panel;
+    protected T object;
+    protected FormBuilder<T> formBuilder;
     public FormEventManager formEventManager = new FormEventManager("formRefresh","exportTable");
     protected ArrayList<Form<?>> formArrayList = new ArrayList<>();
 
+    public Form(JPanel panel, T object) {
+        this.panel = panel;
+        this.object = object;
+        this.formBuilder = new FormBuilder<>(object, this, panel);
+    }
+
     /*
-    Every time the object changes we recreateForm the form
-     */
+        Every time the object changes we recreateForm the form
+         */
     public void setObject(T object) {
         this.object = object;
     }
@@ -27,16 +33,36 @@ public abstract class Form<T extends EntityType>  {
         formArrayList.add(subform);
     }
 
-    protected void recreateForm() {
-        panel.removeAll();
-
-        if (object.getId() != 0 || objectExistInDatabase(object.getId())) {
-            this.object = getNewInstanceOfObject();
+    public void refreshForm() {
+        if (!this.formBuilder.isSubForm()) {
+            panel.removeAll();
         }
+        formArrayList.clear();
 
-       this.formBuilder = new FormBuilder<>(object, this, panel);
-       createForm();
-       repaintPanel();
+        this.formBuilder = new FormBuilder<>(object, this, panel);
+        createForm();
+        repaintPanel();
+        formEventManager.notify("formRefresh");
+
+        for (Form<?> form : formArrayList) {
+            form.refreshForm();
+        }
+    }
+
+    public void rebuildForm() {
+        if (!this.formBuilder.isSubForm()) {
+            panel.removeAll();
+        }
+        formArrayList.clear();
+        this.object = getNewInstanceOfObject();
+        this.formBuilder = new FormBuilder<>(object, this, panel);
+        createForm();
+        repaintPanel();
+        formEventManager.notify("formRefresh");
+
+        for (Form<?> form : formArrayList) {
+            form.refreshForm();
+        }
     }
 
     /**
@@ -67,7 +93,6 @@ public abstract class Form<T extends EntityType>  {
      * @return the new object instance
      */
     protected abstract T getNewInstanceOfObject();
-
 
     /**
      * Queries for an object by it's id
@@ -123,6 +148,7 @@ public abstract class Form<T extends EntityType>  {
         } finally {
             session.close();
         }
+
     }
 
     protected void delete(int objectId) {
@@ -151,9 +177,9 @@ public abstract class Form<T extends EntityType>  {
 
     protected void addClearButton() {
         formBuilder.addButton(new JButton("Clear"), e -> {
-            recreateForm();
-        });
+            rebuildForm();
 
+        });
     }
 
     protected void addSubmitButton() {

@@ -5,6 +5,7 @@ import com.retailShop.Page.Module.Forms.EntityType;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.Arrays;
 import java.util.Objects;
 
 @Entity
@@ -100,5 +101,15 @@ public class User implements EntityType {
         this.userContactByContact = userContactByContact;
     }
 
-
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", password=" + Arrays.toString(password) +
+                ", lastName='" + lastName + '\'' +
+                ", userRoleByRoleid=" + userRoleByRoleid +
+                ", userContactByContact=" + userContactByContact +
+                '}';
+    }
 }

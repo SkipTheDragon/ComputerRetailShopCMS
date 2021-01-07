@@ -13,13 +13,23 @@ import javax.swing.*;
 
 public class EmployeesAddForm extends Form<User> {
 
+    public EmployeesAddForm(JPanel panel, User object) {
+        super(panel, object);
+    }
+
     @Override
     public FormBuilder<User> createForm() {
         panel.setLayout(new MigLayout("wrap 2","[][]"));
 
         UserRepository userRepository= new UserRepository();
         JComboBox<UserRole> roles = new JComboBox<>(userRepository.getRoles());
-        Form<UserContact> userContactForm= new EmployeesAddContactForm();
+        UserContact userContact = new UserContact();
+
+        if (object.getUserContactByContact() != null) {
+            userContact = object.getUserContactByContact();
+        }
+
+        Form<UserContact> userContactForm= new EmployeesAddContactForm(getPanel(),userContact);
 
         formBuilder
                 .addField(new FormField("name", new JTextField(10), "Name"))
@@ -27,11 +37,8 @@ public class EmployeesAddForm extends Form<User> {
                 .addField(new FormField("password", new JPasswordField(10), "Password"))
                 .addField(new FormField("userRoleByRoleid", roles, "User Role"))
                 .addSubForm("userContactByContact", userContactForm.createForm(), "Contact")
-        ;
 
-        if (object.getUserContactByContact() != null) {
-            userContactForm.setObject(object.getUserContactByContact());
-        }
+        ;
 
         addSubmitButton();
         addClearButton();
@@ -39,12 +46,14 @@ public class EmployeesAddForm extends Form<User> {
         formBuilder.addButton(new JButton("Export table"), e -> {
             formEventManager.notify("exportTable");
         });
+
         formBuilder.buildForm();
         return formBuilder;
     }
 
     @Override
     public void processForm() {
+
         if (!objectExistInDatabase(object.getId()))
             insert();
         else

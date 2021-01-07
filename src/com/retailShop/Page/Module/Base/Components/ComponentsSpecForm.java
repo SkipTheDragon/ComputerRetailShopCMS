@@ -11,11 +11,15 @@ import java.util.ArrayList;
 public class ComponentsSpecForm extends Form<ComponentSpecification> {
     ArrayList<ComponentsSpecForm> toAdd = new ArrayList<>();
 
+    public ComponentsSpecForm(JPanel panel, ComponentSpecification object) {
+        super(panel, object);
+    }
+
     @Override
     protected void addClearButton() {
         formBuilder.addButton(new JButton("Clear"), e -> {
             toAdd = new ArrayList<>();
-            recreateForm();
+            rebuildForm();
             repaintPanel();
         });
     }
@@ -24,7 +28,7 @@ public class ComponentsSpecForm extends Form<ComponentSpecification> {
     public FormBuilder<ComponentSpecification> createForm() {
         panel.setLayout(new MigLayout("wrap 2","[][]"));
 
-        ComponentsForm componentsForm = new ComponentsForm();
+        ComponentsForm componentsForm = new ComponentsForm(getPanel(),new Component());
 
         for (ComponentsSpecForm formField : toAdd) {
             formBuilder.addSubForm("componentByComponent",formField.createForm(), "Component");

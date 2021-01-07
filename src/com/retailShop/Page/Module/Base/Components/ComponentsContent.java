@@ -1,6 +1,7 @@
 package com.retailShop.Page.Module.Base.Components;
 
 import com.retailShop.Entity.Component;
+import com.retailShop.Entity.ComponentSpecification;
 import com.retailShop.Entity.User;
 import com.retailShop.Page.Module.Base.Content;
 import com.retailShop.Page.Module.Manager.EmployeesAddForm;
@@ -20,7 +21,7 @@ public class ComponentsContent extends Content {
         ComponentRepository componentRepository = new ComponentRepository();
         String[] columns = {"den","price","type", "sale","maker","warranty","stock","specs"};
 
-        ComponentsSpecForm componentsForm = new ComponentsSpecForm();
+        ComponentsSpecForm componentsForm = new ComponentsSpecForm(new JPanel(), new ComponentSpecification());
         TableBuilder<Component> tableBuilder = new TableBuilder<>(columns,componentRepository.getAllData(Component.class));
 
         componentsForm.formEventManager.subscribe("formRefresh", e -> {
