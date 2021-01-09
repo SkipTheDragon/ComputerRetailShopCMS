@@ -1,6 +1,7 @@
 package com.retailShop.Entity;
 
 import com.retailShop.Page.Module.Forms.EntityType;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -9,8 +10,10 @@ import java.util.Objects;
 @Entity
 public class PurchaseOrder implements EntityType {
     private int id;
-    private Integer items;
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
     private Timestamp orderDate;
+    private User buyer;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -22,16 +25,6 @@ public class PurchaseOrder implements EntityType {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    @Basic
-    @Column(name = "items", nullable = true)
-    public Integer getItems() {
-        return items;
-    }
-
-    public void setItems(Integer items) {
-        this.items = items;
     }
 
     @Basic
@@ -49,11 +42,21 @@ public class PurchaseOrder implements EntityType {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PurchaseOrder that = (PurchaseOrder) o;
-        return id == that.id && Objects.equals(items, that.items) && Objects.equals(orderDate, that.orderDate);
+        return id == that.id && Objects.equals(orderDate, that.orderDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, items, orderDate);
+        return Objects.hash(id, orderDate);
+    }
+
+    @ManyToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name = "buyer", referencedColumnName = "id")
+    public User getBuyer() {
+        return buyer;
+    }
+
+    public void setBuyer(User buyer) {
+        this.buyer = buyer;
     }
 }

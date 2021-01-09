@@ -187,7 +187,21 @@ public class TableBuilder<T> {
     public T getSelectedRowAsObject(String identifier) {
         try {
             for (T object : data) {
-                if (invokeGetter(object,identifier) == getSelectedRowDataByColNo(getColumnNoByName(identifier))) {
+                if (invokeGetter(object, identifier) != null) {
+                    if (invokeGetter(object, identifier).toString().equals(getSelectedRowDataByColNo(getColumnNoByName(identifier)))) {
+                        return object;
+                    }
+                }
+            }
+        } catch (IntrospectionException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public T getSelectedRowByContentAsObject(String identifier, String content) {
+        try {
+            for (T object : data) {
+                if (invokeGetter(object,identifier) == content) {
                     return object;
                 }
             }
@@ -222,7 +236,7 @@ public class TableBuilder<T> {
         return Data;
     }
 
-    private int getColumnNoByName(String identifier) {
+    public int getColumnNoByName(String identifier) {
         for (int i = 0; i < columns.length; i++) {
             if (columns[i].equals(identifier)) {
                 return i;

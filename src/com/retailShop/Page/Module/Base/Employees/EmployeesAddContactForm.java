@@ -1,4 +1,4 @@
-package com.retailShop.Page.Module.Manager;
+package com.retailShop.Page.Module.Base.Employees;
 
 import com.retailShop.Entity.UserContact;
 import com.retailShop.Page.Module.Forms.Form;

@@ -1,10 +1,9 @@
-package com.retailShop.Page.Module.Manager;
+package com.retailShop.Page.Module.Base.Employees;
 
 import com.retailShop.Entity.User;
 import com.retailShop.Page.ContentHandler;
 import com.retailShop.Page.Module.Base.Content;
 import com.retailShop.Page.Module.Forms.Events.ExportTable;
-import com.retailShop.Page.Module.Forms.FormBuilder;
 import com.retailShop.Page.Tables.TableBuilder;
 import com.retailShop.Repository.UserRepository;
 import net.miginfocom.swing.MigLayout;
@@ -26,7 +25,6 @@ public class EmployeesContent extends Content {
         TableBuilder<User> tableBuilder = new TableBuilder<>(columns,userRepository.getAllData(User.class));
 
         employeesAddForm.createForm();
-
 
         JTable jt = tableBuilder.getTable();
         JScrollPane sp= new JScrollPane(jt);

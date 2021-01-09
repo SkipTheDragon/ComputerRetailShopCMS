@@ -186,6 +186,8 @@ public class FormField {
             return ((JPasswordField) component).getPassword();
         } else if (component instanceof JTextComponent) {
             return ((JTextComponent) component).getText();
+        } else if (component instanceof JSpinner) {
+            return ((JSpinner) component).getValue();
         } else {
             return component;
         }
@@ -205,6 +207,8 @@ public class FormField {
                 } else {
                     ((JComboBox<?>) component).setSelectedItem(0);
                 }
+            } else if (component instanceof JSpinner) {
+                ((JSpinner) component).setValue(defaultValue);
             } else {
                 component = defaultValue;
             }

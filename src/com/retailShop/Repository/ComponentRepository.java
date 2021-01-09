@@ -1,13 +1,15 @@
 package com.retailShop.Repository;
 
-import com.retailShop.Entity.Component;
-import com.retailShop.Entity.ComponentType;
-import com.retailShop.Entity.User;
-import com.retailShop.Entity.UserRole;
+import com.retailShop.Entity.*;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
 
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ComponentRepository extends Repository<Component> {
@@ -57,4 +59,42 @@ public class ComponentRepository extends Repository<Component> {
         return null;
     }
 
+    public void sell(ArrayList<Component> components, User user) {
+
+        PurchaseOrder purchaseOrder = new PurchaseOrder();
+
+        purchaseOrder.setBuyer(user);
+        purchaseOrder.setOrderDate(new Timestamp(new Date().getTime()));
+
+        insert(purchaseOrder);
+
+        for (Component component : components) {
+            PurchaseOrderItem purchaseOrderItem = new PurchaseOrderItem();
+            purchaseOrderItem.setComponentByComponent(component);
+            purchaseOrderItem.setOrder(purchaseOrder);
+
+            insert(purchaseOrderItem);
+            component.setStock(component.getStock()-1);
+            insert(component);
+        }
+    }
+
+    private void insert(Object object) {
+        SessionFactory factory = new Configuration().configure().buildSessionFactory();
+
+        Session session = factory.openSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+
+            session.saveOrUpdate(object);
+            session.flush();
+            tx.commit();
+        } catch (HibernateException e) {
+            if (tx!=null) tx.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+    }
 }

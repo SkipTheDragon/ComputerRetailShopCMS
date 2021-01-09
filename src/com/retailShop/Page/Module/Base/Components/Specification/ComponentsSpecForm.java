@@ -43,8 +43,10 @@ public class ComponentsSpecForm extends Form<ComponentSpecification> {
 
     @Override
     public void processForm() {
-        insert();
-    }
+        if (!objectExistInDatabase(object.getId()))
+            insert();
+        else
+            update();    }
 
     @Override
     protected ComponentSpecification getNewInstanceOfObject() {

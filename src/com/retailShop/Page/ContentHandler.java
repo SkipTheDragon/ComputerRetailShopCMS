@@ -39,4 +39,7 @@ public class ContentHandler extends JPanel {
         repaint();
     }
 
+    public User getUser() {
+        return user;
+    }
 }

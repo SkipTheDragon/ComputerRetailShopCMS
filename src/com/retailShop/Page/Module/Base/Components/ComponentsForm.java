@@ -1,7 +1,9 @@
 package com.retailShop.Page.Module.Base.Components;
 
 import com.retailShop.Entity.*;
+import com.retailShop.Entity.Component;
 import com.retailShop.Page.Module.Base.Components.Specification.ComponentsSpecForm;
+import com.retailShop.Page.Module.Base.Purchases.PurchasesForm;
 import com.retailShop.Page.Module.Forms.Form;
 import com.retailShop.Page.Module.Forms.FormBuilder;
 import com.retailShop.Page.Module.Forms.FormField;
@@ -10,6 +12,8 @@ import com.retailShop.Repository.ComponentSpecRepository;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import javax.swing.text.DefaultCaret;
+import java.awt.*;
 
 public class ComponentsForm extends Form<Component> {
     int specForms = 0;
@@ -29,6 +33,7 @@ public class ComponentsForm extends Form<Component> {
     @Override
     public FormBuilder<Component> createForm() {
         panel.setLayout(new MigLayout("wrap 2","[][]"));
+        formEventManager.addEvent("sellComponent");
 
         ComponentRepository componentRepository= new ComponentRepository();
         JComboBox<ComponentType> types = new JComboBox<>(componentRepository.getTypes());
@@ -66,6 +71,11 @@ public class ComponentsForm extends Form<Component> {
         formBuilder.addButton(new JButton("Export table"), e -> {
             formEventManager.notify("exportTable");
         });
+
+        formBuilder.addButton(new JButton("Sell"), e -> {
+            formEventManager.notify("sellComponent");
+        });
+
         formBuilder.buildForm();
         return formBuilder;
     }

@@ -83,6 +83,7 @@ public class User implements EntityType {
 
     @ManyToOne
     @JoinColumn(name = "roleid", referencedColumnName = "id")
+
     public UserRole getUserRoleByRoleid() {
         return userRoleByRoleid;
     }
@@ -103,13 +104,6 @@ public class User implements EntityType {
 
     @Override
     public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", password=" + Arrays.toString(password) +
-                ", lastName='" + lastName + '\'' +
-                ", userRoleByRoleid=" + userRoleByRoleid +
-                ", userContactByContact=" + userContactByContact +
-                '}';
+        return name;
     }
 }

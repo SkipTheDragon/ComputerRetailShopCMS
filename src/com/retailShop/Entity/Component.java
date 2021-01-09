@@ -112,8 +112,6 @@ public class Component implements EntityType {
         return Objects.hash(id, den, price, sale, maker, warranty, stock, specs);
     }
 
-
-
     @ManyToOne()
     @JoinColumn(name = "type", referencedColumnName = "id")
     public ComponentType getType() {
@@ -122,5 +120,10 @@ public class Component implements EntityType {
 
     public void setType(ComponentType type) {
         this.type = type;
+    }
+
+    @Override
+    public String toString() {
+        return den;
     }
 }

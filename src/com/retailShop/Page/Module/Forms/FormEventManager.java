@@ -1,6 +1,7 @@
 package com.retailShop.Page.Module.Forms;
 
-import java.io.File;
+import com.retailShop.Page.Module.Forms.EventListeners.FormEventListener;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +14,11 @@ public class FormEventManager {
         for (String operation : operations) {
             this.listeners.put(operation, new ArrayList<>());
         }
+    }
+
+    public void addEvent(String event) {
+        if (listeners.get(event) != null) return;
+        this.listeners.put(event, new ArrayList<>());
     }
 
     public void subscribe(String eventType, FormEventListener listener) {

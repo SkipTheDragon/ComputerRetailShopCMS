@@ -1,6 +1,6 @@
 package com.retailShop.Page.Module.Forms.Events;
 
-import com.retailShop.Page.Module.Forms.FormEventListener;
+import com.retailShop.Page.Module.Forms.EventListeners.FormEventListener;
 import com.retailShop.Page.Tables.TableBuilder;
 
 import javax.swing.*;

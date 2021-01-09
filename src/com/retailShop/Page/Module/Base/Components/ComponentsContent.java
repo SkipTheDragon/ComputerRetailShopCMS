@@ -11,6 +11,8 @@ import com.retailShop.Repository.ComponentRepository;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ComponentsContent extends Content {
 
@@ -79,6 +81,34 @@ public class ComponentsContent extends Content {
                 if (tableBuilder.getSelectedRowAsObject("den") != null) {
                     componentsForm.setObject(tableBuilder.getSelectedRowAsObject("den"));
                     componentsForm.refreshForm();
+                }
+            }
+        });
+
+
+        componentsForm.formEventManager.subscribe("sellComponent", es -> {
+            ArrayList<Component> components = new  ArrayList<>();
+            boolean outOfStock = false;
+
+            for (int selectedRow : tableBuilder.getTable().getSelectedRows()) {
+                Component component = tableBuilder.getSelectedRowByContentAsObject("den",
+                        tableBuilder.getTable().getValueAt(selectedRow, tableBuilder.getColumnNoByName("den")).toString());
+
+                if (component.getStock() == 0) {
+                    JOptionPane.showMessageDialog(null, component.getDen() + "is out of stock!" , "Sell menu", JOptionPane.ERROR_MESSAGE);
+                    outOfStock= true;
+                } else {
+                    components.add(component);
+                }
+            }
+
+            if (!outOfStock) {
+                int reply = JOptionPane.showConfirmDialog(null, "Did you really sell: " +
+                        components.toString(), "Sell menu", JOptionPane.YES_NO_OPTION);
+
+                if (reply == JOptionPane.YES_OPTION) {
+                    componentRepository.sell(components, content.getUser());
+                    componentsForm.formEventManager.notify("formRefresh");
                 }
             }
         });

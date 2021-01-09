@@ -9,6 +9,7 @@ import java.util.Objects;
 public class PurchaseOrderItem implements EntityType {
     private int id;
     private Component componentByComponent;
+    private PurchaseOrder order;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -43,5 +44,15 @@ public class PurchaseOrderItem implements EntityType {
 
     public void setComponentByComponent(Component componentByComponent) {
         this.componentByComponent = componentByComponent;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "order_id", referencedColumnName = "id")
+    public PurchaseOrder getOrder() {
+        return order;
+    }
+
+    public void setOrder(PurchaseOrder order) {
+        this.order = order;
     }
 }
