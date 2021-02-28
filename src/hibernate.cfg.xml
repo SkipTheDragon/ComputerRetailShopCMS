@@ -12,15 +12,18 @@
     <property name = "hibernate.connection.username">root</property>
     <property name = "hibernate.connection.password">secret</property>
 
-    <mapping class="com.retailShop.Entity.Component"/>
-      <mapping class="com.retailShop.Entity.ComponentSpecification"/>
-      <mapping class="com.retailShop.Entity.ComponentType"/>
-      <mapping class="com.retailShop.Entity.PurchaseOrder"/>
-      <mapping class="com.retailShop.Entity.PurchaseOrderItem"/>
-      <mapping class="com.retailShop.Entity.User"/>
-      <mapping class="com.retailShop.Entity.UserContact"/>
-      <mapping class="com.retailShop.Entity.UserRole"/>
-      <!-- <property name="connection.username"/> -->
+    <mapping class="com.retailShop.entity.Component"/>
+      <mapping class="com.retailShop.entity.ComponentSpecification"/>
+      <mapping class="com.retailShop.entity.ComponentType"/>
+      <mapping class="com.retailShop.entity.PurchaseOrder"/>
+      <mapping class="com.retailShop.entity.PurchaseOrderItem"/>
+      <mapping class="com.retailShop.entity.User"/>
+      <mapping class="com.retailShop.entity.UserContact"/>
+      <mapping class="com.retailShop.entity.UserRole"/>
+      <mapping class="com.retailShop.entity.Log"/>
+    <mapping class="com.retailShop.entity.Permission"/>
+
+    <!-- <property name="connection.username"/> -->
     <!-- <property name="connection.password"/> -->
 
     <!-- DB schema will be updated if needed -->

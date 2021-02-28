@@ -1,6 +1,6 @@
 package com.retailShop;
 
-import com.retailShop.Page.Login;
+import com.retailShop.page.Login;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,6 +19,7 @@ public class Window extends JFrame {
         Window window = new Window("PcGarage Management Program");
         Container contentPane = window.getContentPane();
         contentPane.add(new Login(window));
+        window.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
         window.addWindowListener(new WindowAdapter() {
             @Override

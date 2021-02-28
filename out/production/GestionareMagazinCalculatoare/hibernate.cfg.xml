@@ -20,7 +20,10 @@
       <mapping class="com.retailShop.Entity.User"/>
       <mapping class="com.retailShop.Entity.UserContact"/>
       <mapping class="com.retailShop.Entity.UserRole"/>
-      <!-- <property name="connection.username"/> -->
+      <mapping class="com.retailShop.Entity.Log"/>
+    <mapping class="com.retailShop.Entity.Permission"/>
+
+    <!-- <property name="connection.username"/> -->
     <!-- <property name="connection.password"/> -->
 
     <!-- DB schema will be updated if needed -->
